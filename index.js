@@ -15,6 +15,6 @@ app.use(json())
 app.use(cors())
 app.use('/music', Router)
 
-app.listen(port, () => {
+app.listen(bind, () => {
   console.log(`listening on port ${bind}`)
 })
