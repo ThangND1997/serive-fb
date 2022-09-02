@@ -1,9 +1,9 @@
 import express from 'express'
-import Router from './src/routes/music.js'
+import Router from './src/routes/user.js'
 import pkg from "body-parser";
 import cors from './src/cors.js'
 
-const {  json } = pkg
+const { json } = pkg
 const app = express()
 app.use(json())
 app.use(cors())
