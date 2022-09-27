@@ -47,15 +47,14 @@ router.get('/read', async (req, res) => {
     }
   });
 
-  router.post('/update', async(req, res) => {
+  router.put('/update/:id', async(req, res) => {
     try {
-      const id=req.body.id;
-      const newFirstName = "hello world!";
+      const id=req.params.id;
+      const data = req.body || {}
+      // const newFirstName = "hello world!";
       const userRef = await db.collection("users").doc(id)
-      .update({
-        firstName: newFirstName
-      });
-      res.send(userRef);
+      .update(data);
+      res.json({success: 'ok'});
     } catch(error) {
       res.send(error);
     }
