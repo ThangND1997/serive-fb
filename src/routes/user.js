@@ -2,8 +2,6 @@ import { db } from '../configs/firebase.config.js'
 import express from 'express'
 import { uuid } from 'uuidv4';
 
-import axios from 'axios';
-
 
 const router = express.Router()
 export default router;
@@ -32,17 +30,6 @@ router.get('/read', async (req, res) => {
       res.send(error);
     }
     
-  });
-
-  router.get('/list-film', async (req, res, next) => {
-      const nameSearch = req.query.key || "";
-    axios({
-      method: 'get',
-      url: `https://ophim.cc/_next/data/2uibqhufwNeudgKQPPGsA/tim-kiem.json?keyword=${nameSearch}`,
-    })
-      .then(function (response) {
-        res.json(response.data)
-      });  
   });
 
   router.post('/create', async (req, res) => {
