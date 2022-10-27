@@ -2,9 +2,9 @@ import { db } from '../configs/firebase.config.js'
 import express from 'express'
 import { uuid } from 'uuidv4';
 import * as bcrypt from "bcrypt"
-// import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import jwt from "jsonwebtoken";
-// import {authorization} from "../middleware/authorization.js"
+import {authorization} from "../middleware/authorization.js"
 
 const router = express.Router()
 export default router;
