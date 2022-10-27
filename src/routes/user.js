@@ -2,9 +2,9 @@ import { db } from '../configs/firebase.config.js'
 import express from 'express'
 import { uuid } from 'uuidv4';
 import * as bcrypt from "bcrypt"
-import { collection, query, where, getDocs } from "firebase/firestore";
+// import { collection, query, where, getDocs } from "firebase/firestore";
 import jwt from "jsonwebtoken";
-import {authorization} from "../middleware/authorization.js"
+// import {authorization} from "../middleware/authorization.js"
 
 const router = express.Router()
 export default router;
@@ -19,7 +19,7 @@ router.get('/read/:id', async (req, res) => {
     }
   });
 
-router.get('/read', authorization, async (req, res) => {
+router.get('/read', async (req, res) => {
     try {
         db.collection('users').onSnapshot((snapshot) => {
             const data = snapshot.docs.map(doc => ({
@@ -81,43 +81,43 @@ router.get('/read', authorization, async (req, res) => {
     }
   })
 
-  router.post('/login', async (req, res, next) => {
-    try {
-      const datas = [];
-      const email = req.body.email || "";
-      const password = req.body.password || "";
+  // router.post('/login', async (req, res, next) => {
+  //   try {
+  //     const datas = [];
+  //     const email = req.body.email || "";
+  //     const password = req.body.password || "";
 
-      if (email === "" || password === "") {
-        throw new Error("Missing field")
-      }
+  //     if (email === "" || password === "") {
+  //       throw new Error("Missing field")
+  //     }
 
-      const q = query(collection(db, "users"), where("email", "==", email));
+  //     const q = query(collection(db, "users"), where("email", "==", email));
 
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const id = doc.id
-        datas.push({
-          id,
-          ...doc.data()
-        })
-      });
+  //     const querySnapshot = await getDocs(q);
+  //     querySnapshot.forEach((doc) => {
+  //       const id = doc.id
+  //       datas.push({
+  //         id,
+  //         ...doc.data()
+  //       })
+  //     });
 
-      if (datas.length < 1) {
-        throw new Error("Email is incorrect. Please try again")
-      }
-      const data = datas[0];
-      const isValidatePassword = await bcrypt.compareSync(password, data.password)
-      if (!isValidatePassword) {
-        throw new Error("Password incorrect. Please try again");
-      }
-      let payload = {
-        userId: data.id
-      }
-      let token = jwt.sign(payload, 'secret', { expiresIn: "10h" });
+  //     if (datas.length < 1) {
+  //       throw new Error("Email is incorrect. Please try again")
+  //     }
+  //     const data = datas[0];
+  //     const isValidatePassword = await bcrypt.compareSync(password, data.password)
+  //     if (!isValidatePassword) {
+  //       throw new Error("Password incorrect. Please try again");
+  //     }
+  //     let payload = {
+  //       userId: data.id
+  //     }
+  //     let token = jwt.sign(payload, 'secret', { expiresIn: "10h" });
 
-      res.json({ login: "success", token })
+  //     res.json({ login: "success", token })
 
-    } catch (error) {
-      next(error)
-    }  
-  })
+  //   } catch (error) {
+  //     next(error)
+  //   }  
+  // })

@@ -1,18 +1,18 @@
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 
-export const authorization = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+// export const authorization = (req, res, next) => {
+//     const authHeader = req.headers['authorization'];
+//     const token = authHeader && authHeader.split(' ')[1];
     
-    if (token == null) return res.sendStatus(401)
+//     if (token == null) return res.sendStatus(401)
     
-    jwt.verify(token, "secret", (err, data) => {
-      console.log(err)
+//     jwt.verify(token, "secret", (err, data) => {
+//       console.log(err)
     
-      if (err) return res.sendStatus(403)
+//       if (err) return res.sendStatus(403)
     
-      req.userId = data.userId
+//       req.userId = data.userId
     
-      next()
-    })
-};
+//       next()
+//     })
+// };
