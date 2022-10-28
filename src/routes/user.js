@@ -35,7 +35,7 @@ router.get('/read', authorization, async (req, res) => {
     
   });
 
-  router.post('/create', async (req, res) => {
+  router.post('/create', async (req, res, next) => {
     try {
       const saltRound = 10;
       if (req.body.email === "" ||
@@ -63,7 +63,7 @@ router.get('/read', authorization, async (req, res) => {
         })
       })
     } catch (error) {
-      res.json(error);
+      next(error.message)
     }
   });
 
