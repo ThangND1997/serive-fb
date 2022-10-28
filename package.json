@@ -19,9 +19,11 @@
     "firebase-admin": "^11.0.1",
     "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.22.0",
+    "mailgun.js": "^8.0.2",
     "nhaccuatui-api": "^1.0.0",
     "nodemon": "^2.0.15",
     "uuidv4": "^6.2.13",
-    "zingmp3-api-full": "^1.0.9"
+    "zingmp3-api-full": "^1.0.14"
   }
 }
