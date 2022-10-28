@@ -38,7 +38,14 @@ router.get('/read', authorization, async (req, res) => {
   router.post('/create', async (req, res) => {
     try {
       const saltRound = 10;
-
+      if (req.body.email === "" ||
+          req.body.password === "" ||
+          req.body.firstName === "" ||
+          req.body.lastName === "" ||
+          req.body.address === "" ||
+          req.body.avatar === "") {
+        throw new Error("Missing field")
+          }
       bcrypt.genSalt(saltRound, (err, salt) => {
         bcrypt.hash(req.body.password, salt, async (err, hash_password) => {
           req.body.password = hash_password
@@ -47,7 +54,8 @@ router.get('/read', authorization, async (req, res) => {
             password: req.body.password,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            address: req.body.address
+            address: req.body.address,
+            avatar: req.body.avatar
           };
           const usersDb = db.collection('users');
           await usersDb.doc(uuid()).set(userJson);
