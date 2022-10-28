@@ -9,7 +9,7 @@ import {authorization} from "../middleware/authorization.js"
 const router = express.Router()
 export default router;
 
-router.get('/read/:id', async (req, res) => {
+router.get('/read/:id', authorization, async (req, res) => {
     try {
       const userRef = db.collection("users").doc(req.params.id);
       const response = await userRef.get();
@@ -19,7 +19,7 @@ router.get('/read/:id', async (req, res) => {
     }
   });
 
-router.get('/read', async (req, res) => {
+router.get('/read', authorization, async (req, res) => {
     try {
         db.collection('users').onSnapshot((snapshot) => {
             const data = snapshot.docs.map(doc => ({
@@ -115,7 +115,7 @@ router.get('/read', async (req, res) => {
       }
       let token = jwt.sign(payload, 'secret', { expiresIn: "10h" });
 
-      res.json({ login: "success", token })
+      res.json({ login: "success", token , id: data.id})
 
     } catch (error) {
       next(error)
