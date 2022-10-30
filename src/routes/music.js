@@ -14,3 +14,14 @@ router.get('/song/:id', async (req, res, next) => {
     next(error.messeage);
   }
 });
+
+router.get('/view-song', async (req, res, next) => {
+    try {
+      const name = req.query.name;
+      ZingMp3.search(name).then((data) => {
+        res.json(data)
+      })
+    } catch (error) {
+      next(error.messeage);
+    }
+  });
