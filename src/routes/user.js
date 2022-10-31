@@ -7,10 +7,13 @@ import jwt from "jsonwebtoken";
 import { authorization } from "../middleware/authorization.js"
 // import formData from "form-data"
 // import Mailgun from "mailgun.js"
-
+import nodemailer from "nodemailer"
+import { ownerMailer, inforMailer} from '../configs/config.js';
+import { randomPasswordForgot } from '../libs/Utils.js'
 
 const router = express.Router()
 export default router;
+
 
 router.get('/read/:id', authorization, async (req, res) => {
   try {
@@ -41,14 +44,35 @@ router.get('/read', authorization, async (req, res) => {
 router.post('/create', async (req, res, next) => {
   try {
     const saltRound = 10;
+    const datas = [];
     if (req.body.email === "" ||
       req.body.password === "" ||
       req.body.firstName === "" ||
       req.body.lastName === "" ||
       req.body.address === "" ||
-      req.body.avatar === "") {
+      req.body.avatar === "" ||
+      req.body.genMailCode === "") 
+    {
       throw new Error("Missing field")
     }
+
+    const q = query(collection(db, "Session"), where("code", "==", req.body.genMailCode));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const id = doc.id
+      datas.push({
+        id,
+        ...doc.data()
+      })
+    });
+
+    if(datas.length < 1) {
+      throw new Error("Verify Email Fail. Please check again.")
+    }
+    datas.forEach( async(data) => {
+      await db.collection("Session").doc(data.id).delete();
+    })
+    
     bcrypt.genSalt(saltRound, (err, salt) => {
       bcrypt.hash(req.body.password, salt, async (err, hash_password) => {
         req.body.password = hash_password
@@ -74,7 +98,6 @@ router.put('/update/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body || {}
-    // const newFirstName = "hello world!";
     const userRef = await db.collection("users").doc(id)
       .update(data);
     res.json({ success: 'ok' });
@@ -133,25 +156,71 @@ router.post('/login', async (req, res, next) => {
   }
 })
 
-// router.post('/send-email', async (req, res, next) => {
-//   try {
-//     const mailgun = new Mailgun(formData);
-//     const mg = mailgun.client({username: 'api', key: "pubkey-91001bfc107d75c8fe5d8bc28cafd9b8"});
-//     // const fsPromises = require('fs').promises;
-//     // const path = require('path');
-//     // const filepath = path.resolve(__dirname, '../test.pdf');
-//     let messageParams = {
-//       from: "Excited User <mailgun@sandbox-123.mailgun.org>",
-//       to: ["thang1997iuh@gmail.com"],
-//       subject: "Test subject",
-//       text: "Hello here is a file in the attachment"
-//     }
+router.post('/verify/send-mail', async (req, res, next) => {
+  try {
+    const mailTo = req.query.email;
+    if (mailTo == null) {
+      throw new Error("Missing require field.")
+    }
+    const generateCode = randomPasswordForgot();
+    const sessionData = {
+      code: generateCode
+    }
+    const sessionDb = db.collection('Session');
+    await sessionDb.doc(uuid()).set(sessionData);
 
-//     return mg.messages.create('sandbox-123.mailgun.org', messageParams)
-//       .then(response => {
-//         console.log(response);
-//       })
-//   } catch (error) {
-//     next(error.message);
-//   }
-// });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: ownerMailer.user,
+        pass: ownerMailer.password
+      }
+    });
+    
+    const mailOptions = {
+      from: 'admin@betiu.app',
+      to: mailTo,
+      subject: 'Thank you for participating into Betiu System',
+      text: `Code: ${generateCode}`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        res.json({Status: "Fail to send mail"})
+      } else {
+        console.log('Email send successfully');
+        res.json({Status: "Successfully to send mail"})
+      }
+    });
+
+
+  } catch (error) {
+    next(error.message);
+  }
+});
+
+// // function sendMail(generateCode, mailTo) {
+// //   const transporter = nodemailer.createTransport({
+// //     service: 'gmail',
+// //     auth: {
+// //       user: ownerMailer.user,
+// //       pass: ownerMailer.password
+// //     }
+// //   });
+
+// //   const mailOptions = {
+// //     from: inforMailer.from,
+// //     to: mailTo,
+// //     subject: inforMailer.subject,
+// //     text: messeage
+// //   };
+
+// //   transporter.sendMail(mailOptions, function (error, info) {
+// //     if (error) {
+// //       console.log(error);
+// //     } else {
+// //       console.log('Email send successfully');
+// //     }
+// //   });
+// }
