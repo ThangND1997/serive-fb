@@ -8,7 +8,7 @@ import { authorization } from "../middleware/authorization.js"
 // import formData from "form-data"
 // import Mailgun from "mailgun.js"
 import nodemailer from "nodemailer"
-import { ownerMailer, inforMailer} from '../configs/config.js';
+import { ownerMailer} from '../configs/config.js';
 import { randomPasswordForgot } from '../libs/Utils.js'
 
 const router = express.Router()
@@ -55,7 +55,6 @@ router.post('/create', async (req, res, next) => {
     {
       throw new Error("Missing field")
     }
-
     const q = query(collection(db, "Session"), where("code", "==", req.body.genMailCode));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -161,6 +160,20 @@ router.post('/verify/send-mail', async (req, res, next) => {
     const mailTo = req.query.email;
     if (mailTo == null) {
       throw new Error("Missing require field.")
+    }
+    const q = query(collection(db, "users"), where("email", "==", mailTo));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const id = doc.id
+      datas.push({
+        id,
+        ...doc.data()
+      })
+    });
+
+    if (datas.length > 0) {
+      throw new Error("Email already exists. Please check again.")
     }
     const generateCode = randomPasswordForgot();
     const sessionData = {
