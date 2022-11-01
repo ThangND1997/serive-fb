@@ -50,7 +50,6 @@ router.post('/create', async (req, res, next) => {
       req.body.firstName === "" ||
       req.body.lastName === "" ||
       req.body.address === "" ||
-      req.body.avatar === "" ||
       req.body.genMailCode === "") 
     {
       throw new Error("Missing field")
@@ -81,7 +80,7 @@ router.post('/create', async (req, res, next) => {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           address: req.body.address,
-          avatar: req.body.avatar
+          avatar: req.body.avatar !== "" ? req.body.avatar : "https://cdn.pixabay.com/photo/2017/02/01/09/47/beautiful-girl-2029212_960_720.png"
         };
         const usersDb = db.collection('users');
         await usersDb.doc(uuid()).set(userJson);
