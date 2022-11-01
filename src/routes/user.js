@@ -157,6 +157,7 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/verify/send-mail', async (req, res, next) => {
   try {
+    const datas = [];
     const mailTo = req.query.email;
     if (mailTo == null) {
       throw new Error("Missing require field.")
