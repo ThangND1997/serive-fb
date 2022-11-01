@@ -174,7 +174,7 @@ router.post('/verify/send-mail', async (req, res, next) => {
     });
 
     if (datas.length > 0) {
-      throw new Error("Email already exists. Please check again.")
+      throw new Error("Email already exists. Pleases check again.")
     }
     const generateCode = randomPasswordForgot();
     const sessionData = {
