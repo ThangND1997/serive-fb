@@ -66,3 +66,13 @@ router.get('/view-song', async (req, res, next) => {
       next(error.messeage);
     }
   });
+
+  router.get('/song-home', async (req, res, next) => {
+    try {
+      ZingMp3.getHome().then((data) => {
+        res.json(data)
+      })
+    } catch (error) {
+      next(error.messeage);
+    }
+  });
