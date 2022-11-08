@@ -81,7 +81,7 @@ router.post('/create', async (req, res, next) => {
           lastName: req.body.lastName,
           phone: req.body.phone,
           address: req.body.address || "No address from system betiu",
-          avatar: req.body.avatar !== "" ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif"
+          avatar: (req.body.avatar !== "" && req.body.avatar != null) ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif"
         };
         const usersDb = db.collection('users');
         await usersDb.doc(uuid()).set(userJson);
