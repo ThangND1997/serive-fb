@@ -5,8 +5,6 @@ import * as bcrypt from "bcrypt"
 import { collection, query, where, getDocs } from "firebase/firestore";
 import jwt from "jsonwebtoken";
 import { authorization } from "../middleware/authorization.js"
-// import formData from "form-data"
-// import Mailgun from "mailgun.js"
 import nodemailer from "nodemailer"
 import { ownerMailer} from '../configs/config.js';
 import { randomPasswordForgot } from '../libs/Utils.js'
@@ -190,12 +188,18 @@ router.post('/verify/send-mail', async (req, res, next) => {
         pass: ownerMailer.password
       }
     });
-    
+    const generatedCod = `<div style="color: #00bcd4; cusor: text; background-color: black; text-align: center; padding: 8px; border-radius: 6px;"><p style="font-weight: bold;">${generateCode}</p></div>`;
+    const html = `
+      <p>Cảm ơn bạn đã tin tưởng và sử dụng sản phẩm của chúng tôi. Vui lòng cho chúng tôi biết nếu chúng tôi có thể làm bất cứ điều gì khác để hỗ trợ bạn, giúp bạn có những trải nghiệm tuyệt vời nhất với sản phẩm của chúng tôi.</p>
+      <p>Yêu bạn rất nhiều</p>
+      <p>Mã xác thực tài khoản:  ${generatedCod}</p>
+    `;
     const mailOptions = {
       from: 'admin@betiu.app',
       to: mailTo,
       subject: 'Thank you for participating into Betiu System',
-      text: `Code: ${generateCode}`
+      html: html
+      // text: `Code: ${generateCode}`
     };
 
     transporter.sendMail(mailOptions, function(error, info){
