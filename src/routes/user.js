@@ -47,7 +47,8 @@ router.post('/create', async (req, res, next) => {
     const datas = [];
     if (req.body.email === "" ||
       req.body.password === "" ||
-      req.body.name === "" ||
+      req.body.firstName === "" ||
+      req.body.lastName === "" ||
       req.body.genMailCode === "") 
     {
       throw new Error("Missing field")
@@ -75,8 +76,9 @@ router.post('/create', async (req, res, next) => {
         const userJson = {
           email: req.body.email,
           password: req.body.password,
-          firstName: req.body.name,
-          address: req.body.address || "from system betiu",
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          address: req.body.address || "No address from system betiu",
           avatar: req.body.avatar !== "" ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif"
         };
         const usersDb = db.collection('users');
