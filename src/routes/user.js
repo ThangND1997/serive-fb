@@ -188,7 +188,7 @@ router.post('/verify/send-mail', async (req, res, next) => {
         pass: ownerMailer.password
       }
     });
-    const generatedCod = `<div style="color: #00bcd4; cusor: text; background-color: black; text-align: center; padding: 8px; border-radius: 6px;"><p style="font-weight: bold;">${generateCode}</p></div>`;
+    const generatedCod = `<div style="color: #00bcd4; cusor: text; background-color: black; text-align: center; padding: 8px; border-radius: 6px;"><p style="font-weight: bold; margin-top: 10px;">${generateCode}</p></div>`;
     const html = `
       <p>Cảm ơn bạn đã tin tưởng và sử dụng sản phẩm của chúng tôi. Vui lòng cho chúng tôi biết nếu chúng tôi có thể làm bất cứ điều gì khác để hỗ trợ bạn, giúp bạn có những trải nghiệm tuyệt vời nhất với sản phẩm của chúng tôi.</p>
       <p>Yêu bạn rất nhiều</p>
