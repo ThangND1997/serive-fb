@@ -47,8 +47,7 @@ router.post('/create', async (req, res, next) => {
     const datas = [];
     if (req.body.email === "" ||
       req.body.password === "" ||
-      req.body.firstName === "" ||
-      req.body.lastName === "" ||
+      req.body.name === "" ||
       req.body.genMailCode === "") 
     {
       throw new Error("Missing field")
@@ -76,8 +75,7 @@ router.post('/create', async (req, res, next) => {
         const userJson = {
           email: req.body.email,
           password: req.body.password,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
+          firstName: req.body.name,
           address: req.body.address || "from system betiu",
           avatar: req.body.avatar !== "" ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif"
         };
@@ -157,7 +155,7 @@ router.post('/verify/send-mail', async (req, res, next) => {
   try {
     const datas = [];
     const mailTo = req.query.email;
-    if (mailTo == null) {
+    if (mailTo == null || mailTo == "") {
       throw new Error("Missing require field.")
     }
     const q = query(collection(db, "users"), where("email", "==", mailTo));
