@@ -47,8 +47,9 @@ router.post('/create', async (req, res, next) => {
     const datas = [];
     if (req.body.email === "" ||
       req.body.password === "" ||
-      req.body.firstName === "" ||
-      req.body.lastName === "" ||
+      (req.body.firstName === "" &&
+      req.body.lastName === "") ||
+      req.body.phone === "" ||
       req.body.genMailCode === "") 
     {
       throw new Error("Missing field")
@@ -78,6 +79,7 @@ router.post('/create', async (req, res, next) => {
           password: req.body.password,
           firstName: req.body.firstName,
           lastName: req.body.lastName,
+          phone: req.body.phone,
           address: req.body.address || "No address from system betiu",
           avatar: req.body.avatar !== "" ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif"
         };
