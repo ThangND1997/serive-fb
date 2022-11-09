@@ -199,7 +199,6 @@ router.post('/verify/send-mail', async (req, res, next) => {
       to: mailTo,
       subject: 'Thank you for participating into Betiu System',
       html: html
-      // text: `Code: ${generateCode}`
     };
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -217,28 +216,3 @@ router.post('/verify/send-mail', async (req, res, next) => {
     next(error.message);
   }
 });
-
-// // function sendMail(generateCode, mailTo) {
-// //   const transporter = nodemailer.createTransport({
-// //     service: 'gmail',
-// //     auth: {
-// //       user: ownerMailer.user,
-// //       pass: ownerMailer.password
-// //     }
-// //   });
-
-// //   const mailOptions = {
-// //     from: inforMailer.from,
-// //     to: mailTo,
-// //     subject: inforMailer.subject,
-// //     text: messeage
-// //   };
-
-// //   transporter.sendMail(mailOptions, function (error, info) {
-// //     if (error) {
-// //       console.log(error);
-// //     } else {
-// //       console.log('Email send successfully');
-// //     }
-// //   });
-// }

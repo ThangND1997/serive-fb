@@ -2,8 +2,8 @@
 const ownerMailer = {
     // user: "thang1997iuh@gmail.com",
     // password: "jfhyvzdzaxzlvgsy"
-    user: "thangnd@stageit.app",
-    password: "tlhbsohpcufulfcv"
+    user: "system.betiu.app@gmail.com",
+    password: "uggouwntfnvittrf"
 };
 
 const inforMailer = {
