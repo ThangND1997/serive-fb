@@ -47,7 +47,6 @@ router.post('/create', async (req, res, next) => {
       req.body.password === "" ||
       (req.body.firstName === "" &&
       req.body.lastName === "") ||
-      req.body.phone === "" ||
       req.body.genMailCode === "") 
     {
       throw new Error("Missing field")
@@ -192,7 +191,7 @@ router.post('/verify/send-mail', async (req, res, next) => {
     const html = `
       <p>Cảm ơn bạn đã tin tưởng và sử dụng sản phẩm của chúng tôi. Vui lòng cho chúng tôi biết nếu chúng tôi có thể làm bất cứ điều gì khác để hỗ trợ bạn, giúp bạn có những trải nghiệm tuyệt vời nhất với sản phẩm của chúng tôi.</p>
       <p>Yêu bạn rất nhiều</p>
-      <p>Mã xác thực tài khoản:  ${generatedCod}</p>
+      <p style="margin-bottom: 24px;">Mã xác thực tài khoản:  ${generatedCod}</p>
     `;
     const mailOptions = {
       from: 'admin@betiu.app',
