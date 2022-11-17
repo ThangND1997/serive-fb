@@ -222,8 +222,17 @@ router.post('/verify/send-mail', async (req, res, next) => {
   }
 });
 
-router.get('/test', (req, res, next) => {
-  axios("https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=1")
+router.get('/list-film', (req, res, next) => {
+  const numb = req.query.page;
+  axios(`https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=${numb}`)
+  .then(result => {
+    res.json(result.data)
+  })
+})
+
+router.get('/search-film', (req, res, next) => {
+  const nameFilm = req.query.name;
+  axios(`https://ophim1.com/phim/${nameFilm}`)
   .then(result => {
     res.json(result.data)
   })
