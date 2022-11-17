@@ -236,4 +236,7 @@ router.get('/search-film', (req, res, next) => {
   .then(result => {
     res.json(result.data)
   })
+  .catch(e => {
+    res.json({status: false})
+  })
 })
