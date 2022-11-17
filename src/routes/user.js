@@ -8,6 +8,7 @@ import { authorization } from "../middleware/authorization.js"
 import nodemailer from "nodemailer"
 import { ownerMailer} from '../configs/config.js';
 import { randomPasswordForgot } from '../libs/Utils.js'
+import usersModel from '../model/users.model.js';
 
 const router = express.Router()
 export default router;
@@ -17,21 +18,25 @@ router.get('/read/:id', authorization, async (req, res) => {
   try {
     const userRef = db.collection("users").doc(req.params.id);
     const response = await userRef.get();
-    res.json(response.data());
+    const data = response.data()
+    res.json(usersModel.convertData(data));
   } catch (error) {
     res.send(error);
   }
 });
 
-router.get('/read', authorization, async (req, res) => {
+router.get('/read', async (req, res) => {
   try {
+    const ret = [];
     db.collection('users').onSnapshot((snapshot) => {
       const data = snapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id
       }))
-      console.log(data)
-      res.json(data);
+      data.forEach(item => {
+        ret.push(usersModel.convertData(item))
+      })
+      res.json(ret);
     })
   } catch (error) {
     res.send(error);
