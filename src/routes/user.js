@@ -9,6 +9,7 @@ import nodemailer from "nodemailer"
 import { ownerMailer} from '../configs/config.js';
 import { randomPasswordForgot } from '../libs/Utils.js'
 import usersModel from '../model/users.model.js';
+import axios from 'axios';
 
 const router = express.Router()
 export default router;
@@ -25,7 +26,7 @@ router.get('/read/:id', authorization, async (req, res) => {
   }
 });
 
-router.get('/read', async (req, res) => {
+router.get('/read', authorization, async (req, res) => {
   try {
     const ret = [];
     db.collection('users').onSnapshot((snapshot) => {
@@ -220,3 +221,10 @@ router.post('/verify/send-mail', async (req, res, next) => {
     next(error.message);
   }
 });
+
+router.get('/test', (req, res, next) => {
+  axios("https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=1")
+  .then(result => {
+    res.json(result.data)
+  })
+})
