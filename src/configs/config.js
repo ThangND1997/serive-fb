@@ -1,9 +1,10 @@
+import * as dotEnv from "dotenv";
+dotEnv.config();
 
 const ownerMailer = {
-    // user: "thang1997iuh@gmail.com",
-    // password: "jfhyvzdzaxzlvgsy"
     user: "system.betiu.app@gmail.com",
-    password: "uggouwntfnvittrf"
+    user: process.env.USER_ID_MAILER,
+    password: process.env.PASSWORD_MAILER
 };
 
 const inforMailer = {

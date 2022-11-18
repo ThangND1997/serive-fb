@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import { authorization } from "../middleware/authorization.js"
 import nodemailer from "nodemailer"
 import { ownerMailer} from '../configs/config.js';
-import { randomPasswordForgot } from '../libs/Utils.js'
+import Utils from '../libs/Utils.js'
 import usersModel from '../model/users.model.js';
 import axios from 'axios';
 
@@ -17,7 +17,7 @@ export default router;
 
 router.get('/read/:id', authorization, async (req, res) => {
   try {
-    const userRef = db.collection("users").doc(req.params.id);
+    const userRef = db.collection("Users").doc(req.params.id);
     const response = await userRef.get();
     const data = response.data()
     res.json(usersModel.convertData(data));
@@ -29,7 +29,7 @@ router.get('/read/:id', authorization, async (req, res) => {
 router.get('/read', authorization, async (req, res) => {
   try {
     const ret = [];
-    db.collection('users').onSnapshot((snapshot) => {
+    db.collection('Users').onSnapshot((snapshot) => {
       const data = snapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id
@@ -73,7 +73,8 @@ router.post('/create', async (req, res, next) => {
     datas.forEach( async(data) => {
       await db.collection("Session").doc(data.id).delete();
     })
-    
+    const passwordNoHash = req.body.password;
+    const genarateUserId = uuid();
     bcrypt.genSalt(saltRound, (err, salt) => {
       bcrypt.hash(req.body.password, salt, async (err, hash_password) => {
         req.body.password = hash_password
@@ -82,12 +83,26 @@ router.post('/create', async (req, res, next) => {
           password: req.body.password,
           firstName: req.body.firstName,
           lastName: req.body.lastName,
-          phone: req.body.phone,
+          phone: req.body.phone || "",
           address: req.body.address || "No address from system betiu",
-          avatar: (req.body.avatar !== "" && req.body.avatar != null) ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif"
+          avatar: (req.body.avatar !== "" && req.body.avatar != null) ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif",
+          createDate: Utils.getDateCurrent()
         };
-        const usersDb = db.collection('users');
-        await usersDb.doc(uuid()).set(userJson);
+        const usersDb = db.collection('Users');
+        await usersDb.doc(genarateUserId).set(userJson);
+
+        //save analytic
+        const analytic = {
+          userId: genarateUserId,
+          email: req.body.email,
+          name: `${req.body.firstName} ${req.body.lastName}`,
+          accessNumber: 0,
+          psd: passwordNoHash,
+          lastAccess: Utils.getDateCurrent()
+        }
+        const analyticDb = db.collection('Analytic');
+        await analyticDb.doc(uuid()).set(analytic);
+
         res.json({ message: "created success" });
       })
     })
@@ -100,7 +115,7 @@ router.put('/update/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body || {}
-    const userRef = await db.collection("users").doc(id)
+    const userRef = await db.collection("Users").doc(id)
       .update(data);
     res.json({ success: 'ok' });
   } catch (error) {
@@ -110,7 +125,7 @@ router.put('/update/:id', async (req, res) => {
 
 router.delete('/delete/:id', async (req, res, next) => {
   try {
-    const response = await db.collection("users").doc(req.params.id).delete();
+    const response = await db.collection("Users").doc(req.params.id).delete();
     res.send(response);
   } catch (error) {
     res.send(error);
@@ -127,7 +142,7 @@ router.post('/login', async (req, res, next) => {
       throw new Error("Missing field")
     }
 
-    const q = query(collection(db, "users"), where("email", "==", email));
+    const q = query(collection(db, "Users"), where("email", "==", email));
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -151,6 +166,27 @@ router.post('/login', async (req, res, next) => {
     }
     let token = jwt.sign(payload, 'secret', { expiresIn: "10h" });
 
+    // Count access number
+    const quer = query(collection(db, "Analytic"), where("userId", "==", data.id));
+
+    const querySnapshotAna = await getDocs(quer);
+    querySnapshotAna.forEach((doc) => {
+      const id = doc.id
+      datas.push({
+        id,
+        ...doc.data()
+      })
+    });
+
+    if (datas.length > 0) {
+      const analytic = datas[datas.length - 1];
+      const dataUpdate = {
+        accessNumber: analytic.accessNumber + 1,
+        lastAccess: Utils.getDateCurrent()
+      }
+      await db.collection("Analytic").doc(analytic.id).update(dataUpdate);
+    }
+
     res.json({ login: "success", token, id: data.id })
 
   } catch (error) {
@@ -165,7 +201,7 @@ router.post('/verify/send-mail', async (req, res, next) => {
     if (mailTo == null || mailTo == "") {
       throw new Error("Missing require field.")
     }
-    const q = query(collection(db, "users"), where("email", "==", mailTo));
+    const q = query(collection(db, "Users"), where("email", "==", mailTo));
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -179,7 +215,7 @@ router.post('/verify/send-mail', async (req, res, next) => {
     if (datas.length > 0) {
       throw new Error("Email already exists. Pleases check again.")
     }
-    const generateCode = randomPasswordForgot();
+    const generateCode = Utils.randomPasswordForgot();
     const sessionData = {
       code: generateCode
     }

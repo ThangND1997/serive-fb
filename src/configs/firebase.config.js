@@ -4,18 +4,11 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDFKvDZ_bePgsor3SOZBUvOVI3Z8wqsgYQ",
-//   databaseURL: "https://chatbox-firebase-d0c5d-default-rtdb.firebaseio.com",
-//   authDomain: "chatbox-firebase-d0c5d.firebaseapp.com",
-//   projectId: "chatbox-firebase-d0c5d",
-//   storageBucket: "chatbox-firebase-d0c5d.appspot.com",
-//   messagingSenderId: "575706021600",
-//   appId: "1:575706021600:web:e0e7fa9100b3db4d7b9a85",
-//   measurementId: "G-GXX1W2NWN3"
-// };
+import * as dotEnv from "dotenv";
+dotEnv.config();
+
 const firebaseConfig = { 
-  apiKey : "AIzaSyDfvqKjhZQLJfBQQqkhQU30FW4rPWudLd8" , 
+  apiKey : process.env.FIREBASE_KEY, 
   databaseURL: "https://fbservice-e0023-default-rtdb.firebaseio.com",
   authDomain : "fbservice-e0023.firebaseapp.com" , 
   projectId : "fbservice-e0023" , 
