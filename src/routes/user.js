@@ -101,7 +101,7 @@ router.post('/create', async (req, res, next) => {
           lastAccess: Utils.getDateCurrent()
         }
         const analyticDb = db.collection('Analytic');
-        await analyticDb.doc(uuid()).set(analytic);
+        await analyticDb.doc(analytic.email).set(analytic);
 
         res.json({ message: "created success" });
       })
