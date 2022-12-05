@@ -4,7 +4,7 @@ export const cors = () => {
         res.header("Connection", "close");
         res.header("Content-Type", "application/json; charset=utf-8");
         // restrict it to the required domain
-        const allowedDomains = ['https://betiu-music.web.app', 'https://betiuplay.web.app'];
+        const allowedDomains = ['https://betiu-music.web.app', 'https://betiuplay.web.app', 'http://localhost:3000'];
         const origin = req.headers.origin;
         if (allowedDomains.indexOf(origin) > -1) {
             res.setHeader('Access-Control-Allow-Origin', origin);
