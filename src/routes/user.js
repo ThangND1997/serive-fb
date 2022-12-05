@@ -68,6 +68,7 @@ router.post('/create', async (req, res, next) => {
     });
 
     if(datas.length < 1) {
+      await db.collection("Session").doc("DC").delete();
       throw new Error("Verify Email Fail. Please check again.")
     }
     datas.forEach( async(data) => {
