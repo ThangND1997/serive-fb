@@ -277,3 +277,14 @@ router.get('/search-film', (req, res, next) => {
     res.json({status: false})
   })
 })
+
+router.get('/search-film-tes', (req, res, next) => {
+  const nameFilm = req.query.name;
+  axios(`http://ophim1.cc/_next/data/4Ty7510PdBWqP8sPF1ThI/tim-kiem.json?keyword=${nameFilm}`)
+  .then(result => {
+    res.json(result.data)
+  })
+  .catch(e => {
+    res.json({status: false})
+  })
+})
