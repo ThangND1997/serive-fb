@@ -112,6 +112,29 @@ router.post('/create', async (req, res, next) => {
   }
 });
 
+router.post('/create-google', async (req, res, next) => {
+  try {
+    if (req.body.providerId == null || req.body.providerId != "google.com") {
+      throw new Error("error")
+    }
+    const userJson = {
+      email: req.body.email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      phone: req.body.phone || "",
+      address: req.body.address || "No address from system betiu",
+      avatar: (req.body.avatar !== "" && req.body.avatar != null) ? req.body.avatar : "https://phunugioi.com/wp-content/uploads/2020/02/anh-dong-cute-de-thuong.gif",
+      createDate: Utils.getDateCurrent()
+    };
+    const genarateUserId = req.body.id;
+    const usersDb = db.collection('Users');
+    await usersDb.doc(genarateUserId).set(userJson);
+    res.json({ message: "created success" });
+  } catch (error) {
+    next(error.message)
+  }
+});
+
 router.put('/update/:id', async (req, res) => {
   try {
     const id = req.params.id;
