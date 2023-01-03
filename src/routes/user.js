@@ -15,7 +15,7 @@ const router = express.Router()
 export default router;
 
 
-router.get('/read/:id', authorization, async (req, res) => {
+router.get('/read/:id', async (req, res) => {
   try {
     const userRef = db.collection("Users").doc(req.params.id);
     const response = await userRef.get();
