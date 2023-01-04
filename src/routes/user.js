@@ -311,3 +311,18 @@ router.get('/search-film-tes', (req, res, next) => {
     res.json({status: false})
   })
 })
+
+router.get('/filter-film', (req, res, next) => {
+  const slug = req.query.slug;
+  const categoryId = req.query.categoryId;
+  const subCategoryId = req.query.subCategoryId;
+  const country = req.query.country;
+  const year = req.query.year;
+  axios(`http://ophim1.cc/_next/data/4Ty7510PdBWqP8sPF1ThI/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}`)
+  .then(result => {
+    res.json(result.data)
+  })
+  .catch(e => {
+    res.json({status: false})
+  })
+})
