@@ -26,7 +26,7 @@ class Utils {
     }
 
     getDateCurrent() {
-        return moment(new Date()).format("YYYY-MM-DD HH:mm")
+        return moment(new Date()).tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD HH:mm")
     }
 }
 
