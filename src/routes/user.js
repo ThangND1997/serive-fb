@@ -290,8 +290,48 @@ router.get('/list-film', (req, res, next) => {
   })
 })
 
-router.get('/search-film', (req, res, next) => {
+router.get('/search-film', async (req, res, next) => {
   const nameFilm = req.query.name;
+  const email = req.query.email;
+  const content = nameFilm;
+  const datas = [];
+
+  //find or update statistics  
+  const quer = query(collection(db, "statistics"), where("email", "==", email));
+
+  const querySnapshotAna = await getDocs(quer);
+  querySnapshotAna.forEach((doc) => {
+    const id = doc.id
+    datas.push({
+      id,
+      ...doc.data()
+    })
+  });
+
+  if (datas.length > 0) {
+    const statistic = datas[datas.length - 1];
+    statistic.historyContent.push(`${content} (${statistic.lastAccess})`);
+    const dataUpdate = {
+      accessNumber: statistic.accessNumber + 1,
+      lastContent: content.replaceAll("-", " "),
+      historyContent: statistic.historyContent,
+      lastAccess: Utils.getDateCurrent()
+    }
+    await db.collection("statistics").doc(statistic.id).update(dataUpdate);
+  } else {
+    //save statistics
+    const statistic = {
+      email,
+      accessNumber: 0,
+      lastContent: content.replaceAll("-", " "),
+      historyContent: [`${content} (${Utils.getDateCurrent()})`],
+      lastAccess: Utils.getDateCurrent()
+    }
+    const statisticDb = db.collection('statistics');
+    await statisticDb.doc(statistic.email).set(statistic);
+  }
+
+
   axios(`https://ophim1.com/phim/${nameFilm}`)
   .then(result => {
     res.json(result.data)
@@ -326,3 +366,66 @@ router.get('/filter-film', (req, res, next) => {
     res.json({status: false})
   })
 })
+
+router.post('/notification-admin', async (req, res, next) => {
+  try {
+    const datas = [];
+    const email = req.query.email;
+    if (email == null || email == "") {
+      throw new Error("Missing require field.")
+    }
+    //find or update statistics  
+  const quer = query(collection(db, "statistics"), where("email", "==", email));
+
+  const querySnapshotAna = await getDocs(quer);
+  querySnapshotAna.forEach((doc) => {
+    const id = doc.id
+    datas.push({
+      id,
+      ...doc.data()
+    })
+  });
+  let lastContent = "No find datas"
+  let dateTime = ""
+  if (datas.length > 0) {
+    const statistic = datas[datas.length - 1];
+    lastContent = statistic.lastContent;
+    dateTime = statistic.lastAccess;
+  }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: ownerMailer.user,
+        pass: ownerMailer.password
+      }
+    });
+    const emailBcc = `<div style="color: #00bcd4; cusor: text; background-color: black; text-align: center; padding: 8px; border-radius: 6px;"><p style="font-weight: bold; margin-top: 10px;">${email}</p></div>`;
+    const contentBcc = `<div style="color: #00bcd4; cusor: text; background-color: black; text-align: center; padding: 8px; border-radius: 6px;"><p style="font-weight: bold; margin-top: 10px;">${lastContent} (${dateTime})</p></div>`;
+    const html = `
+      <p>Hệ thống nhận được lượt truy cập mới từ khách hàng.</p>
+      <p style="margin-bottom: 24px;">Email:  ${emailBcc}</p>
+      <p style="margin-bottom: 24px;">Nôị dung và thời gian truy cập:  ${contentBcc}</p>
+    `;
+    const mailOptions = {
+      from: 'admin@betiu.app',
+      to: 'thang1997iuh@gmail.com',
+      subject: 'Have access from client',
+      html: html
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        res.json({Status: "Fail to send mail system"})
+      } else {
+        console.log('Email send successfully');
+        res.json({Status: "Successfully to send mail system"})
+      }
+    });
+
+
+  } catch (error) {
+    next(error.message);
+  }
+});
