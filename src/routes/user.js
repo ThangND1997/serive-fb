@@ -374,6 +374,9 @@ router.post('/notification-admin', async (req, res, next) => {
     if (email == null || email == "") {
       throw new Error("Missing require field.")
     }
+    if (email == "thang1997iuh@gmail.com") {
+      throw new Error("email admin.")
+    }
     //find or update statistics  
   const quer = query(collection(db, "statistics"), where("email", "==", email));
 
