@@ -358,7 +358,8 @@ router.get('/filter-film', (req, res, next) => {
   const subCategoryId = req.query.subCategoryId;
   const country = req.query.country;
   const year = req.query.year;
-  axios(`http://ophim1.cc/_next/data/x5eGH4wObN-EpnueF2sPG/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}`)
+  const page =req.query.page;
+  axios(`http://ophim1.cc/_next/data/x5eGH4wObN-EpnueF2sPG/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
   .then(result => {
     res.json(result.data)
   })
