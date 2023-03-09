@@ -343,7 +343,7 @@ router.get('/search-film', async (req, res, next) => {
 
 router.get('/search-film-tes', (req, res, next) => {
   const nameFilm = req.query.name;
-  axios(`http://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP//tim-kiem.json?keyword=${nameFilm}`)
+  axios(`http://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/tim-kiem.json?keyword=${nameFilm}`)
   .then(result => {
     res.json(result.data)
   })
@@ -359,7 +359,7 @@ router.get('/filter-film', (req, res, next) => {
   const country = req.query.country;
   const year = req.query.year;
   const page =req.query.page;
-  axios(`http://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP//danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
+  axios(`http://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
   .then(result => {
     res.json(result.data)
   })
