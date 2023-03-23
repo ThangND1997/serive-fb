@@ -360,7 +360,7 @@ router.get('/filter-film', (req, res, next) => {
   const year = req.query.year;
   const page =req.query.page;
   // axios(`http://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
-  axios(`https://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/danh-sach/${subCategoryId}.json?slug=${subCategoryId}`)
+  axios(`https://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/the-loai/${subCategoryId}.json?slug=${subCategoryId}`)
   .then(result => {
     result.status = true;
     res.json(result.data)
