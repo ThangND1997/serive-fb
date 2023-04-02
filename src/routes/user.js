@@ -359,6 +359,9 @@ router.get('/filter-film', (req, res, next) => {
   const country = req.query.country;
   const year = req.query.year;
   const page =req.query.page;
+  if (subCategoryId === "phim-18") {
+    throw Error("No Support")
+  }
   // axios(`http://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
   axios(`https://ophim1.cc/_next/data/mb8sEjlWnVhCahS67g4AP/the-loai/${subCategoryId}.json?slug=${subCategoryId}&page=${page}`)
   .then(result => {
