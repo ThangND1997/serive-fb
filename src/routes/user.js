@@ -369,7 +369,7 @@ router.get('/filter-film', (req, res, next) => {
     res.json(result.data)
   })
   .catch(e => {
-    res.json({status: false})
+    res.json({status: false, message: e.message})
   })
 })
 
