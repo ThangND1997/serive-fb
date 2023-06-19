@@ -343,7 +343,7 @@ router.get('/search-film', async (req, res, next) => {
 
 router.get('/search-film-tes', (req, res, next) => {
   const nameFilm = req.query.name;
-  axios(`http://ophim1.cc/_next/data/bMep5VbIGtkpBRqoaRU-z/tim-kiem.json?keyword=${nameFilm}`)
+  axios(`https://ophim8.cc/_next/data/O-jeGiNKPcH23VNXfeIn2/tim-kiem.json?keyword=${nameFilm}`)
   .then(result => {
     res.json(result.data)
   })
@@ -362,8 +362,8 @@ router.get('/filter-film', (req, res, next) => {
   // if (subCategoryId === "phim-18") {
   //   throw Error("No Support")
   // }
-  // axios(`http://ophim1.cc/_next/data/bMep5VbIGtkpBRqoaRU-z/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
-  axios(`https://ophim1.cc/_next/data/bMep5VbIGtkpBRqoaRU-z/the-loai/${subCategoryId}.json?slug=${subCategoryId}&page=${page}`)
+  // axios(`https://ophim8.cc/_next/data/O-jeGiNKPcH23VNXfeIn2/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
+  axios(`https://ophim8.cc/_next/data/O-jeGiNKPcH23VNXfeIn2/the-loai/${subCategoryId}.json?slug=${subCategoryId}&page=${page}`)
   .then(result => {
     result.status = true;
     res.json(result.data)
