@@ -343,7 +343,7 @@ router.get('/search-film', async (req, res, next) => {
 
 router.get('/search-film-tes', (req, res, next) => {
   const nameFilm = req.query.name;
-  axios(`https://ophim8.cc/_next/data/s4OlXy8jONoHVWAT5vg7b/tim-kiem.json?keyword=${nameFilm}`)
+  axios(`https://ophim1.cc/_next/data/s4OlXy8jONoHVWAT5vg7b/tim-kiem.json?keyword=${nameFilm}`)
   .then(result => {
     res.json(result.data)
   })
@@ -363,7 +363,7 @@ router.get('/filter-film', (req, res, next) => {
   //   throw Error("No Support")
   // }
   // axios(`https://ophim8.cc/_next/data/s4OlXy8jONoHVWAT5vg7b/danh-sach/${categoryId}.json?slug=${slug}&sort_field=_id&category=${subCategoryId}&country=${country}&year=${year}&page=${page}`)
-  axios(`https://ophim8.cc/_next/data/s4OlXy8jONoHVWAT5vg7b/the-loai/${subCategoryId}.json?slug=${subCategoryId}&page=${page}`)
+  axios(`https://ophim1.cc/_next/data/s4OlXy8jONoHVWAT5vg7b/the-loai/${subCategoryId}.json?slug=${subCategoryId}&page=${page}`)
   .then(result => {
     result.status = true;
     res.json(result.data)
